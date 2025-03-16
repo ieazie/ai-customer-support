@@ -1,0 +1,18 @@
+graph TD
+    A[Client] -->|WebSocket Connection| B[CallHandlerGateway]
+    B --> C{New Session?}
+    C -->|Yes| D[Initialize Session Context]
+    D --> E[Create SpeechToText Session]
+    E --> F[Store in Session Manager]
+    C -->|No| F
+    F --> G[Process Audio Chunk]
+    G --> H[SpeechToText Service]
+    H -->|Transcription + Sentiment| I[Update Session Context]
+    I --> J[AI Agent Service]
+    J -->|Generate Response + Context Update| K[Update Session State]
+    K --> L[TextToSpeech Service]
+    L -->|Audio Response| M[Send to Client]
+    M --> N[Log Interaction]
+    N --> O[Database]
+    O --> P[Persist Context]
+    P --> Q[Next Audio Chunk]

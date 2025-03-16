@@ -1,0 +1,12 @@
+# Environment Variables
+
+- Configuration files must use environment variables
+- Never commit sensitive environment variables to source control.
+- Use a `.env` file for local development.
+- Document all required environment variable in the README.md file.
+
+# Security
+
+- Production API URLS must not be committed to source code.
+- Use the environment variable for all sensitive configuration.
+- Keep credentials and API keys secure and never expose them in client-side code.

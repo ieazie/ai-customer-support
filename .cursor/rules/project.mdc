@@ -1,0 +1,75 @@
+
+# General
+
+- Follow the user's requirements carefully.
+- Ask clarifying questions.
+- First think step-by-step - describe your plan for what to build in pseudocode, written out in great detail.
+- Confirm, then write the code!
+- Focus on easy and readable code, over being performant.
+- Fully implement all requested functionality.
+- Leave NO todos, placeholder or missing pieces.
+- Ensure code is complete! Verify thoroughly finalised.
+- Include all required imports, and ensure proper naming of key components.
+- If you think that there might not be a correct answer, say so.
+- If you don't know the answer, say so , instead of guessing.
+- Use early returns whenever possible to make the code more readable.
+
+# Conflict resolution
+
+- When user request a change that you believe to break the rule, mention the rule and ask the user to verify the request.
+- If possible, put a comment where it makes most sense, why are we breaking cursor rules.
+
+# Code Organisation
+
+- Keep code organized by feature or domain.
+- Use clear and consistent naming conventions.
+- Follow the established project structure.
+- Document complex logic or business rules.
+- Use Typescript for type safety where possible.
+
+# Tooling
+
+- The project uses `Make` for running common tasks. All the useful commands around development
+MUST be wrapped around make file, so developers do not work around cryptic/long/hard-to-remember commands.
+- When building scripts, tools, add wrapper around them using `Makefile`, the general command naming follows
+`{domain}-{action}` with parameters following it (i.e. `db-apply-change local`).
+
+# NPM Scripts
+
+- Use npm scripts for common development tasks.
+- Document all available scripts in the README.md file.
+- Keep package.json scripts organized and well-named.
+- Use consistent naming conventions for scripts.
+
+# Architecture
+
+## Server
+
+## API Guidelines
+
+- Use consistent error handling across all routes
+- Include appropriate logging for debugging and monitoring
+- Follow RESTful conventions for API routes naming
+- Use the correct HTTP status codes for responses
+- Use the correct HTTP methods for each route
+- Use the correct HTTP headers for responses
+- Use the correct HTTP status codes for responses
+- Document all endpoints with clear descriptions of request/response formats
+- Handle file uploads with proper content type and size limits.
+- Implement proper validation for all incoming requests
+
+## Translations
+
+- All translations should be managed in `client/src/locale/translations/i18n` directory.
+- Two main translation files are `en.json` (English) and `de.json` (German).
+- NEVER create new translation files, always add new keys to existing files.
+- Keep translations organized by feature/domain using nested object.
+- Ensure all keys exists in both `en.json` and `de.json` files.
+- Follow existing patterns for translation keys if any.
+- Use descriptive key names that reflect the content being translated.
+- Maintain consistent structure between language files.
+- Add new translation only to existing files using proper nesting.
+- Keep translations synchronized between languages files.
+
+
+

@@ -1,0 +1,8 @@
+graph TD
+    A[Process Chunk] --> B{SpeechToText Success?}
+    B -->|Yes| C[Continue]
+    B -->|No| D[Increment Retry Count]
+    D --> E{Retries < 3?}
+    E -->|Yes| F[Request Re-upload]
+    E -->|No| G[Flag for Handoff]
+    G --> H[Notify Client]

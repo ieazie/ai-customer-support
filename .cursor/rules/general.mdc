@@ -1,0 +1,21 @@
+General rules for the agent
+
+# General Rules
+- Don't jump to conclusions.
+- Don't make assumptions.
+-Ask clarifying questions.
+
+# Solving Problems
+- Explain the error in simple terms.
+- Suggest 3 possible best solutions.
+
+# Github Push Process
+- refer to structure.mdc for project structure.
+- git status
+- git add <changed files>
+- git commit -m "what changed"
+- git push
+
+#Git Branching Strategy
+- Use conventional commits.
+- Use conventional branch names.
