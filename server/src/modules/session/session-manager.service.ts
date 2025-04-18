@@ -49,6 +49,10 @@ export class SessionManagerService {
     return session;
   }
 
+  getAllSessionIds(): string[] {
+    return Array.from(this.sessions.keys());
+  }
+
   getSessionTimeouts(sessionId: string): NodeJS.Timeout {
     const timeout = this.sessionTimeouts.get(sessionId);
     if (!timeout) {
@@ -97,8 +101,19 @@ export class SessionManagerService {
     if (this.sessions.has(sessionId)) {
       // Cleanup resources here
       this.sessions.delete(sessionId);
-      this.sessionTimeouts.delete(sessionId);
+      
+      // Also clean up any timeouts
+      if (this.sessionTimeouts.has(sessionId)) {
+        const timeout = this.sessionTimeouts.get(sessionId);
+        if (timeout) {
+          clearTimeout(timeout);
+        }
+        this.sessionTimeouts.delete(sessionId);
+      }
+      
       this.logger.log(`Session closed: ${sessionId}`);
+    } else {
+      this.logger.warn(`Attempted to close non-existent session: ${sessionId}`);
     }
   }
 

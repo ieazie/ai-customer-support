@@ -13,6 +13,7 @@ export class SpeechToTextService {
     private readonly logger = new Logger(SpeechToTextService.name);
     private readonly client: AssemblyAI;
     private sessions = new Map<string, TranscriptionSession>();
+    private audioReceived = new Set<string>(); // Track sessions that have received audio
 
     constructor(private readonly configService: ConfigService) {
         this.client = new AssemblyAI({
@@ -77,6 +78,12 @@ export class SpeechToTextService {
         }
 
         try {
+            // Mark that we've received audio for this session
+            this.audioReceived.add(sessionId);
+            
+            // Log the audio chunk size
+            this.logger.debug(`Processing audio chunk for session ${sessionId}: ${chunk.length} bytes`);
+            
             await session.transcriber.sendAudio(chunk);
             return this.getCurrentTranscript(sessionId);
         } catch (error) {
@@ -106,7 +113,56 @@ export class SpeechToTextService {
             return this.emptyTranscriptionResult();
         } finally {
             this.cleanupSession(sessionId);
+            // Clear audio received flag when finalizing session
+            this.audioReceived.delete(sessionId);
         }
+    }
+
+    async finalizeCurrentChunk(sessionId: string): Promise<TranscriptionResult> {
+        const session = this.sessions.get(sessionId);
+        if (!session) return this.emptyTranscriptionResult();
+
+        try {
+            // Check if we've received any audio for this session
+            const hasAudio = this.hasReceivedAudio(sessionId);
+            this.logger.debug(`Finalizing current chunk for session ${sessionId}. Has received audio: ${hasAudio}`);
+            
+            // Get current transcript without closing the session
+            const result = this.getCurrentTranscript(sessionId);
+            
+            // Log the transcript details
+            this.logger.debug(`Current transcript for ${sessionId}: text="${result.text || '(empty)'}", isFinal=${result.isFinal}, confidence=${result.confidence}`);
+            
+            // Clear final text to prepare for the next chunk
+            if (session.finalText) {
+                session.finalText = '';
+                session.words = [];
+            }
+            
+            // Add sentiment analysis if we have text
+            if (result.text) {
+                result.sentiment = await this.analyzeSentiment(result.text);
+            }
+
+            return result;
+        } catch (error) {
+            this.logger.error(`Chunk finalization error: ${error.message}`);
+            return this.emptyTranscriptionResult();
+        }
+    }
+
+    /**
+     * Gets information about a transcription session for debugging purposes
+     */
+    getSessionInfo(sessionId: string): TranscriptionSession | undefined {
+        return this.sessions.get(sessionId);
+    }
+    
+    /**
+     * Checks if any audio has been received for this session
+     */
+    async hasReceivedAudio(sessionId: string): Promise<boolean> {
+        return this.audioReceived.has(sessionId);
     }
 
     private getCurrentTranscript(sessionId: string): TranscriptionResult {

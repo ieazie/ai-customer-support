@@ -1,8 +1,388 @@
-
+---
+description: Project structure and organization rules
+globs: client/**/* server/**/*
+alwaysApply: true
+---
 # Project Structure
 
+This document outlines the directory structure and organization of the AI Customer Support project.
 
+## Root Directory Structure
 
+```
+/
+├── client/              # Next.js frontend application
+├── server/              # NestJS backend application
+├── makefile             # Build and development commands
+├── docker-compose.yml   # Main Docker configuration
+├── docker-compose.override.yml  # Docker override configuration
+└── README.md            # Project documentation
+```
 
+## Client (Frontend)
 
-# Directory Structure
+```
+client/
+├── src/                # Source code
+│   ├── components/     # Reusable React components
+│   │   ├── Icons/      # Icon components
+│   │   │   ├── PhoneIcon.tsx
+│   │   │   └── StopIcon.tsx
+│   │   ├── AudioPlayer.tsx      # Audio playback component
+│   │   ├── AudioRecorder.tsx    # Voice recording component
+│   │   ├── ConnectionStatus.tsx # Network status indicator
+│   │   ├── HandoffStatus.tsx    # Human agent handoff status
+│   │   ├── TranscriptView.tsx   # Conversation transcript display
+│   │   └── WebSocketManager.tsx # WebSocket connection handler
+│   ├── lib/            # Utility functions
+│   │   ├── audioUtils.ts  # Audio processing helpers
+│   │   ├── websocket.ts   # WebSocket connection utilities
+│   │   ├── client.ts      # API client utilities
+│   │   └── session.ts     # Session management utilities
+│   ├── stores/         # State management (Zustand)
+│   │   └── useCallStore.ts # Call state management
+│   ├── pages/          # Next.js pages
+│   │   ├── _app.tsx    # Next.js app wrapper
+│   │   └── index.tsx   # Main application page
+│   ├── styles/         # CSS and styling
+│   │   └── global.css  # Global styles
+│   └── types/          # TypeScript type definitions
+│       ├── global.d.ts     # Global type declarations
+│       └── react-audio.d.ts # React audio type extensions
+├── public/            # Static assets
+├── tailwind.config.ts # Tailwind CSS configuration
+├── tsconfig.json      # TypeScript configuration
+├── package.json       # Project dependencies and scripts
+├── postcss.config.mjs # PostCSS configuration
+├── next.config.ts     # Next.js configuration
+├── docker-compose.client.yml # Client Docker configuration
+└── README.md          # Client documentation
+```
+
+## Server (Backend)
+
+```
+server/
+├── src/                # Source code
+│   ├── modules/        # Feature modules
+│   │   ├── ai-agent/   # AI conversation handling
+│   │   │   ├── interfaces/   # Module interfaces
+│   │   │   ├── ai-agent.module.ts  # Module definition
+│   │   │   └── ai-agent.service.ts # Service implementation
+│   │   ├── analytics/  # User interaction analytics
+│   │   │   └── interaction.module.ts
+│   │   ├── call-handler/ # Call management
+│   │   │   ├── interfaces/
+│   │   │   ├── call-handler.gateway.ts # WebSocket gateway
+│   │   │   └── call-handler.module.ts  # Module definition
+│   │   ├── database/   # Database connection
+│   │   ├── session/    # Session management
+│   │   ├── speech-to-text/ # Voice transcription
+│   │   ├── text-to-speech/ # Text-to-voice synthesis
+│   │   └── flow-diagrams/ # Process flow visualizations
+│   ├── common/         # Shared utilities
+│   │   ├── errors/     # Custom error classes
+│   │   │   ├── AIProcessingError.ts
+│   │   │   ├── DisconnectedError.ts
+│   │   │   ├── InactiveSessionError.ts
+│   │   │   ├── NetworkConnectionError.ts
+│   │   │   ├── SessionNotFoundError.ts
+│   │   │   ├── SpeechToTextTranscriptionError.ts
+│   │   │   └── TextToSpeechSynthesisError.ts
+│   │   └── interfaces/ # Shared interfaces
+│   │       └── SentimentAnalysis.ts
+│   ├── config/         # Application configuration
+│   │   ├── data-source.ts      # Database configuration
+│   │   └── sequelize.config.ts # ORM configuration
+│   ├── app.module.ts   # Main application module
+│   └── main.ts         # Application entry point
+├── migrations/        # Database migrations
+├── test/              # Test files
+├── tsconfig.json      # TypeScript configuration
+├── package.json       # Project dependencies and scripts
+├── nest-cli.json      # NestJS CLI configuration
+├── .sequelizerc       # Sequelize ORM configuration
+├── docker-compose.server.yml # Server Docker configuration
+├── Dockerfile         # Docker container definition
+└── README.md          # Server documentation
+```
+
+## Module Structure
+
+Each feature module should follow this structure:
+
+```
+module-name/
+├── interfaces/                # Module-specific interfaces
+│   └── [interface-name].ts
+├── dto/                       # Data Transfer Objects
+│   └── [dto-name].dto.ts
+├── entities/                  # Database entities
+│   └── [entity-name].entity.ts
+├── [module-name].module.ts    # Module definition
+├── [module-name].service.ts   # Business logic
+├── [module-name].gateway.ts   # WebSocket handlers (if needed)
+├── [module-name].controller.ts # REST controllers (if needed)
+└── [module-name].test.ts      # Unit tests
+```
+
+## Component Structure
+
+React components should follow this structure:
+
+```
+ComponentName/
+├── ComponentName.tsx   # Component implementation
+├── ComponentName.test.tsx # Component tests
+└── index.ts           # Export file (optional)
+```
+
+## File Naming Conventions
+
+1. **React Components**
+   - PascalCase for component files: `AudioPlayer.tsx`
+   - PascalCase for component directories: `Icons/`
+
+2. **Backend Files**
+   - kebab-case for module directories: `ai-agent/`
+   - kebab-case for module files: `ai-agent.service.ts`
+   - Descriptive suffixes: `.module.ts`, `.service.ts`, `.gateway.ts`
+
+3. **Utility Files**
+   - camelCase for utility files: `audioUtils.ts`
+   - Descriptive names indicating purpose
+
+4. **Test Files**
+   - Same name as the file being tested with `.test` suffix
+   - Example: `AudioPlayer.test.tsx` or `ai-agent.service.test.ts`
+
+## Import Organization
+
+Keep imports organized in the following order:
+
+```typescript
+// External libraries
+import { useState } from 'react';
+import { Module } from '@nestjs/common';
+
+// Internal modules - absolute imports
+import { useCallStore } from '@/stores/useCallStore';
+
+// Internal modules - relative imports
+import { SomeInterface } from './interfaces';
+
+// CSS imports
+import '@/styles/components.css';
+```
+
+# File Naming
+
+## General Principles
+
+- Use descriptive names that clearly convey the purpose of the file
+- Keep names concise while still being descriptive
+- Use consistent naming patterns across the project
+- Avoid abbreviations except for commonly understood ones (e.g., ID, HTTP)
+- Avoid special characters except for separators (hyphens, underscores) and dots
+
+## Frontend File Naming
+
+1. **React Components**
+   - Use PascalCase for component files: `AudioPlayer.tsx`
+   - Include file extension: `.tsx` for components with JSX, `.ts` for plain TypeScript
+   - Match the file name to the main exported component name
+   - For component-specific helpers/utilities, use camelCase: `audioPlayerHelpers.ts`
+
+2. **Testing Files**
+   - Use the same name as the file being tested with `.test` or `.spec` suffix
+   - Example: `AudioPlayer.test.tsx` or `AudioPlayer.spec.tsx`
+
+3. **Style Files**
+   - For global styles: `global.css`
+   - For component-specific styles: `[ComponentName].module.css`
+   - For theme files: `theme.ts` or `darkTheme.ts`
+
+4. **Type Definitions**
+   - For general type definitions: `[domain].types.ts`
+   - For component props: `[ComponentName].props.ts` (optional)
+   - For shared interfaces: `interfaces.ts`
+
+5. **Configuration Files**
+   - Use conventional names: `next.config.ts`, `tailwind.config.ts`
+   - For custom configs, use kebab-case: `api-client-config.ts`
+
+## Backend File Naming
+
+1. **Module Files**
+   - Use kebab-case for all module files
+   - Add descriptive suffixes indicating the file's role:
+     - `.module.ts` for module definitions
+     - `.service.ts` for services
+     - `.controller.ts` for REST controllers
+     - `.gateway.ts` for WebSocket gateways
+     - `.repository.ts` for data repositories
+     - `.entity.ts` for database entity definitions
+     - `.dto.ts` for Data Transfer Objects
+     - `.guard.ts` for authorization guards
+     - `.middleware.ts` for middleware
+     - `.pipe.ts` for data transformation pipes
+     - `.interceptor.ts` for interceptors
+
+2. **Testing Files**
+   - Use the same name as the file being tested with `.spec.ts` suffix
+   - Group tests by feature/module
+   - End-to-end tests should use `.e2e-spec.ts` suffix
+
+3. **Configuration Files**
+   - Use descriptive kebab-case: `database-config.ts`
+   - For environment-specific configs: `production.config.ts`
+
+4. **Utility Files**
+   - Use camelCase for utility files: `fileUtils.ts`
+   - Group related utilities in directories with descriptive names
+
+# Code Organization
+
+## General Principles
+
+- Follow the Single Responsibility Principle (SRP)
+- Keep files focused on a single concern or feature
+- Limit file size (generally under 300-400 lines)
+- Maintain consistent code style throughout the project
+- Use comments to explain complex logic, not obvious code
+- Include JSDoc comments for public APIs and functions
+
+## Frontend Code Organization
+
+1. **Component Structure**
+   - Start with imports, followed by type definitions
+   - Define constants and utilities specific to the component
+   - Define the component function with proper JSDoc
+   - Export the component as default export
+   - Example structure:
+     ```tsx
+     // Imports
+     import { useState } from 'react';
+     
+     // Types
+     interface Props {
+       // ...
+     }
+     
+     // Component-specific constants
+     const DEFAULT_STATE = { /* ... */ };
+     
+     /**
+      * ComponentName - Description of component purpose
+      */
+     export default function ComponentName(props: Props) {
+       // State hooks
+       const [state, setState] = useState(DEFAULT_STATE);
+       
+       // Event handlers
+       const handleEvent = () => {
+         // ...
+       };
+       
+       // Render helpers (small UI pieces)
+       const renderItem = (item) => {
+         // ...
+       };
+       
+       // Main return statement
+       return (
+         // JSX
+       );
+     }
+     ```
+
+2. **Store Organization (Zustand)**
+   - Define interfaces first
+   - Export store creation as named export
+   - Group related actions together
+   - Example:
+     ```ts
+     // Types
+     interface StoreState {
+       // State properties
+     }
+     
+     // Store creation
+     export const useStore = create<StoreState>((set) => ({
+       // State properties
+       
+       // Action groups
+       actions: {
+         // Related actions
+       }
+     }));
+     ```
+
+3. **Utility Functions**
+   - Group related functions in the same file
+   - Export functions as named exports
+   - Include proper typings and JSDoc comments
+
+## Backend Code Organization
+
+1. **Module Structure**
+   - Follow NestJS module pattern
+   - Keep related functionality in the same module
+   - Use dependency injection properly
+   - Organize imports by external/internal
+
+2. **Service Structure**
+   - Start with constructor and dependency injection
+   - Group methods by functionality
+   - Keep complex business logic in dedicated methods
+   - Use private methods for internal functionality
+   - Example:
+     ```ts
+     @Injectable()
+     export class ExampleService {
+       constructor(
+         private readonly dependency: DependencyService,
+       ) {}
+       
+       // Public methods - API for the service
+       
+       // Private helper methods
+     }
+     ```
+
+3. **Controller/Gateway Structure**
+   - Group endpoints by resource/functionality
+   - Include proper decorators and metadata
+   - Keep controller methods thin, delegating to services
+   - Use DTOs for request/response data
+
+4. **Entity Structure**
+   - Define entity with appropriate decorators
+   - Group related fields together
+   - Include validation decorators
+   - Define relations clearly
+
+## Database Access Patterns
+
+1. **Repository Pattern**
+   - Use repositories to abstract database access
+   - Keep queries in repository methods
+   - Use descriptive method names
+
+2. **Data Transfer Objects**
+   - Define DTOs for input validation
+   - Use class-validator decorators
+   - Keep DTOs focused on specific operations
+
+## Error Handling
+
+1. **Frontend Error Handling**
+   - Use try/catch for async operations
+   - Implement error boundaries for React components
+   - Provide meaningful error messages to users
+
+2. **Backend Error Handling**
+   - Create custom exception classes
+   - Use filters for exception handling
+   - Return appropriate HTTP status codes
+   - Include meaningful error messages

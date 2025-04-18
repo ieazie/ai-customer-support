@@ -27,6 +27,8 @@ lerna-debug.log*
 *.launch
 .settings/
 *.sublime-workspace
+vcs.xml
+/.idea/.gitignore
 
 # IDE - VSCode
 .vscode/*

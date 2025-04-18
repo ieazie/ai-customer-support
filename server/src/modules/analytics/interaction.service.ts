@@ -38,6 +38,7 @@ export class InteractionService {
             sentimentScore: data.sentimentScore,
             context: data.context,
             voiceModelUsed: data.voiceModelUsed,
+            timestamp: new Date(),
         });
 
         // await this.interactionRepository.save(interaction);
@@ -64,7 +65,13 @@ export class InteractionService {
         if (session) {
             session.endTime = new Date();
             session.duration = (session.endTime.getTime() - session.startTime.getTime()) / 1000;
-            await this.sessionRepository.upsert({ ...session });
+            
+            await this.sessionRepository.upsert({
+                id: session.id,
+                startTime: session.startTime,
+                endTime: session.endTime,
+                duration: session.duration
+            });
         }
     }
 }

@@ -18,6 +18,8 @@ export interface SessionContext {
   clientInfo: ClientConnectionInfo;
   sampleRate?: number;
   createdAt: Date;
+  vadStatus?: 'idle' | 'speaking' | 'processing' | 'responding';
+  isSpeaking?: boolean;
 }
 
 export interface ConversationTurn {

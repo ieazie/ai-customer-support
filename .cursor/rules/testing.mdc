@@ -1,0 +1,52 @@
+---
+description: Testing rules and guidelines
+globs: **/__tests__/**/* **/*.tests.* **/*.specs.*
+alwaysApply: true
+---
+
+# Test Structure
+
+- UI tests are always under `client/src/__tests__` directory.
+
+# Test Coverage
+
+- Test all critical business logic
+- Aim for high test coverage in core functionality
+- Include both happy path and error cases
+- Test all edge cases and boundary conditions
+
+# Test Organization
+
+- Keep test close to implementation files
+- Use descriptive test names but explain the behavior in the test
+- Group related tests using the describe block
+- Use beforeEach and afterEach for common setup/cleanup
+- Follow the AAA pattern (Arrange, Act, Assert) in tests
+
+# Testing Best Practices
+
+- Write isolated tests that don't depend on each other
+- Mock external dependencies appropriately
+- Use meaningful test data
+- Avoid testing implementation details
+- Keep tests maintainable and easy to read
+
+# Testing Tools
+
+- Use Jest as the test runner
+- Use React Testing Library for UI/Component tests
+- Use MSW for mocking API requests
+- Use appropriate assertion libraries
+- Run `npm test` after significant changes
+
+
+# Integration Testing
+
+- Include integration tests for critical paths
+- Test component in interaction
+- Test API integrations
+- Test routing behaviour
+- Test state management integration
+- The development server is running separately
+- Use logging for page test action
+- Suppress human unreadable output in tests
