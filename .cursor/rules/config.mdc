@@ -1,3 +1,8 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
 # Environment Variables
 
 - Configuration files must use environment variables

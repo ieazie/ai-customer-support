@@ -1,7 +1,19 @@
+---
+description: Build and deployment rules
+globs:
+alwaysApply: true
+---
+
 
 # Build Process
 
 # Version Control
+
+- Package versions must be properly maintained in  package.json file.
+- Use Semantic versioning
+- Keep dependencies up to date
+- Document breaking changes in the CHANGELOG.md file
+- Tag releases appropriately
 
 # Deployment
 

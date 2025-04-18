@@ -1,3 +1,9 @@
+---
+description: General project rules and guidelines
+globs: **/*
+alwaysApply: true
+---
+
 
 # General
 
@@ -70,6 +76,3 @@ MUST be wrapped around make file, so developers do not work around cryptic/long/
 - Maintain consistent structure between language files.
 - Add new translation only to existing files using proper nesting.
 - Keep translations synchronized between languages files.
-
-
-
